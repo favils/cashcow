@@ -10,7 +10,7 @@ class ATM(Base):
     __tablename__ = "atms"
 
     id: Mapped[int] = mapped_column(primary_key = True)
-    serial_number: Mapped[str] = mapped_column(String(50), unique = True)
+    serial_number: Mapped[str] = mapped_column(String(150), unique = True)
     status: Mapped[ATMStatus] = mapped_column(
         SqlEnum(
             ATMStatus,
