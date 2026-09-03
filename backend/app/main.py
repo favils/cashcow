@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import atms, branches, auth
+from app.routers import atms, services, auth
 
 app = FastAPI (
     title= "Cash Cow Management",
@@ -20,5 +20,5 @@ app.add_middleware(
 """
 
 app.include_router(atms.router)
-app.include_router(branches.router)
 app.include_router(auth.router)
+app.include_router(services.router)
