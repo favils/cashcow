@@ -7,3 +7,10 @@ class DiscrepencyRead(BaseModel):
     technician_branch_id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+class CompletionRead(BaseModel):
+    model: str
+    completed: int
+    failed: int
+
+    model_config = ConfigDict(from_attributes=True)
