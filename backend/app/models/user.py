@@ -6,12 +6,12 @@ from sqlalchemy import Integer, String, Enum as SqlEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
 class User (Base):
-    __tablename__: "users"
+    __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key = True)
     username: Mapped[str] = mapped_column(String, unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String(150))
-    user_role: Mapped[UserRole] = mapped_column(
+    role: Mapped[UserRole] = mapped_column(
         SqlEnum(
             UserRole,
             name="user_role",

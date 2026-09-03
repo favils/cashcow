@@ -1,4 +1,0 @@
-/discrepencies
-why do we have the code
-if priority is not None:
-        statement = statement.where(Mission.priority == priority)

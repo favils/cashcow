@@ -7,7 +7,7 @@ from app.dependencies import get_db
 from app.schemas.service import DiscrepencyRead
 from app.models import ServiceCall, Technician, ATM
 
-router = APIRouter(prefix="service", tags=["service"])
+router = APIRouter(prefix="/service", tags=["service"])
 
 @router.get("/discrepencies", response_model=list[DiscrepencyRead])
 async def list_discrepencies(
