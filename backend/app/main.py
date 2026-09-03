@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.routers import atms, services, auth
 
 app = FastAPI (
@@ -9,15 +10,13 @@ app = FastAPI (
     version="0.1.0"
 )
 
-"""
-connection to frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[]
-    allow_methods=
-    allow_headers=
+    allow_origins=[settings.frontend_origin],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-"""
 
 app.include_router(atms.router)
 app.include_router(auth.router)
