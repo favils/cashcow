@@ -1,6 +1,6 @@
 from .base import Base
 
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 class Technician(Base):
@@ -9,6 +9,6 @@ class Technician(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(150))
 
-    branch_id: Mapped[int] = mapped_column(Integer)
+    branch_id: Mapped[int] = mapped_column(Integer, ForeignKey("branches.id"))
     
     

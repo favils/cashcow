@@ -11,7 +11,7 @@ class ServiceCall(Base):
 
     __tablename__ = "service_calls"
     
-    id: Mapped[int] = mapped_column(Integer)
+    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(150))
     priority: Mapped[ServicePriority] = mapped_column(
         SqlEnum(
@@ -28,4 +28,4 @@ class ServiceCall(Base):
         )
     )
     atm_id: Mapped[int] = mapped_column(Integer, ForeignKey("atms.id"))
-    technician_id: Mapped[int] = mapped_column(Integer)
+    technician_id: Mapped[int] = mapped_column(Integer, ForeignKey("technicians.id"))
