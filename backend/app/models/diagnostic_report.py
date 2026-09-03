@@ -9,7 +9,7 @@ class DiagnosticReport(Base):
 
     __tablename__ = "diagnostic_reports"
 
-    id: Mapped[int] = mapped_column(Integer)
+    id: Mapped[int] = mapped_column(primary_key=True)
     service_call_id: Mapped[int] = mapped_column(Integer, ForeignKey("service_calls.id"))
     file_url: Mapped[str] = mapped_column(Text)
     notes: Mapped[str] = mapped_column(Text, nullable= True)
