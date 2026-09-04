@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import atms, services, auth, branches
+from app.routers import atms, services, auth, branches, diagnostic_reports
 
 app = FastAPI (
     title= "Cash Cow Management",
@@ -22,3 +22,8 @@ app.include_router(atms.router)
 app.include_router(auth.router)
 app.include_router(services.router)
 app.include_router(branches.router)
+app.include_router(diagnostic_reports.router)
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}

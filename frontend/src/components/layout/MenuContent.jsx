@@ -4,13 +4,17 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import { PAGES } from '../../navigation.jsx';
+import { pagesForRole } from '../../navigation.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 export default function MenuContent({ selected, onSelect }) {
+    const { user } = useAuth();
+    const pages = pagesForRole(user?.role);
+
     return (
         <Stack sx={{ flexGrow: 1, p: 1 }}>
             <List dense>
-                {PAGES.map((page) => (
+                {pages.map((page) => (
                     <ListItem key={page.key} disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             selected={page.key === selected}
