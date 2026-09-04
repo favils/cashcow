@@ -6,11 +6,20 @@ from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db
-from app.schemas.branch import MaintenanceFlagRead
+from app.schemas.branch import BranchRead, MaintenanceFlagRead
 from app.models import Branch, ATM
 from app.models.enums import ATMStatus
 
 router = APIRouter(prefix="/branch", tags=["branch"])
+
+@router.get("", response_model=list[BranchRead])
+async def list_branches(
+        db: AsyncSession = Depends(get_db)
+    ):
+    statement = select(Branch).order_by(Branch.id)
+
+    result = await db.execute(statement)
+    return list(result.scalars().all())
 
 @router.get("/maintenance-flags", response_model=list[MaintenanceFlagRead])
 async def list_maintenance_flags(
