@@ -4,13 +4,22 @@ from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db
-from app.schemas.service import DiscrepencyRead, CompletionRead, SupervisorActiveTechniciansRead
+from app.schemas.service import ServiceCallRead, DiscrepencyRead, CompletionRead, SupervisorActiveTechniciansRead
 from app.models import ServiceCall, Technician, ATM, Branch
 from app.models.enums import ServiceStatus
 
 ACTIVE_SERVICE_STATUSES = (ServiceStatus.PENDING, ServiceStatus.IN_PROGRESS)
 
 router = APIRouter(prefix="/service", tags=["service"])
+
+@router.get("", response_model=list[ServiceCallRead])
+async def list_service_calls(
+        db: AsyncSession = Depends(get_db)
+    ):
+    statement = select(ServiceCall).order_by(ServiceCall.id)
+
+    result = await db.execute(statement)
+    return list(result.scalars().all())
 
 @router.get("/discrepencies", response_model=list[DiscrepencyRead])
 async def list_discrepencies(
