@@ -1,17 +1,37 @@
+import { useState } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import SideMenu from './components/layout/SideMenu.jsx';
 import LoginForm from './components/auth/LoginForm.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
+import { PAGES } from './navigation.jsx';
 
 function Dashboard() {
+    const [selected, setSelected] = useState(PAGES[0].key);
+    const page = PAGES.find((p) => p.key === selected);
+    const PageComponent = page.component;
+
     return (
-        <Box sx={{ display: 'flex' }}>
-            <SideMenu />
-            <Box component="main" sx={{ flexGrow: 1 }}>
-                <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Box sx={{ display: 'flex', height: '100vh' }}>
+            <SideMenu selected={selected} onSelect={setSelected} />
+            <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0 }}>
+                <Container
+                    maxWidth="lg"
+                    sx={{
+                        mt: 4,
+                        mb: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flexGrow: 1,
+                        minHeight: 0,
+                        overflowY: 'auto',
+                    }}
+                >
                     <Typography variant="h5" component="h2" gutterBottom>
-                        Fleet Overview
+                        {page.label}
                     </Typography>
+                    <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+                        <PageComponent />
+                    </Box>
                 </Container>
             </Box>
         </Box>

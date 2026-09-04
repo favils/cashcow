@@ -26,7 +26,7 @@ const Drawer = styled(MuiDrawer)({
     },
 });
 
-export default function SideMenu() {
+export default function SideMenu({ selected, onSelect }) {
     const { user, logout } = useAuth();
 
     return (
@@ -35,7 +35,7 @@ export default function SideMenu() {
                 <Box component="img" src="/logo.png" alt="Cash Cow" sx={{ height: 32 }} />
             </Stack>
             <Divider />
-            <MenuContent />
+            <MenuContent selected={selected} onSelect={onSelect} />
             <Stack
                 direction="row"
                 sx={{
