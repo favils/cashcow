@@ -17,6 +17,4 @@ class ATMRead(ATMBase):
     model_config = ConfigDict(from_attributes=True)
 
 class ATMCreate(ATMBase):
-    """
-    shape of atm create
-    """
+    pass

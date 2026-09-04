@@ -3,11 +3,14 @@ import { Box, Container, Typography } from '@mui/material';
 import SideMenu from './components/layout/SideMenu.jsx';
 import LoginForm from './components/auth/LoginForm.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
-import { PAGES } from './navigation.jsx';
+import { pagesForRole } from './navigation.jsx';
 
 function Dashboard() {
-    const [selected, setSelected] = useState(PAGES[0].key);
-    const page = PAGES.find((p) => p.key === selected);
+    const { user } = useAuth();
+    const pages = pagesForRole(user?.role);
+
+    const [selected, setSelected] = useState(pages[0].key);
+    const page = pages.find((p) => p.key === selected) ?? pages[0];
     const PageComponent = page.component;
 
     return (

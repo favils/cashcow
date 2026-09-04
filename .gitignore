@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 .env
 .env.*
+!.env.example
+backend/lambda-env.json
+backend/lambda_deployment.zip
+backend/package/
+frontend/dist/

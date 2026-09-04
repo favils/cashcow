@@ -2,15 +2,20 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.enums import ServicePriority, ServiceStatus
 
-class ServiceCallRead(BaseModel):
-    id: int
+class ServiceCallCreate(BaseModel):
     title: str = Field(min_length=1, max_length=150)
     priority: ServicePriority
     status: ServiceStatus
     atm_id: int
     technician_id: int
 
+class ServiceCallRead(ServiceCallCreate):
+    id: int
+
     model_config = ConfigDict(from_attributes=True)
+
+class ServiceCallStatusUpdate(BaseModel):
+    status: ServiceStatus
 
 class DiscrepencyRead(BaseModel):
     service_id: int

@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.user import Token, UserCreate, UserRead
+from app.schemas.user import Token, UserCreate, UserRead, UserUpdate
 from app.security import create_access_token, hash_password, verify_password
 from app.models.user import User
 from app.dependencies import get_db, require_role
@@ -55,3 +55,49 @@ async def register_user(
     await db.refresh(user)
 
     return user
+
+@router.get("/users", response_model=list[UserRead])
+async def list_users(
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_role(UserRole.OPERATIONS_ADMIN))
+) -> list[User]:
+    result = await db.execute(select(User).order_by(User.id))
+    return list(result.scalars().all())
+
+@router.get("/users/{user_id}", response_model=UserRead)
+async def get_user(
+    user_id: int,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_role(UserRole.OPERATIONS_ADMIN))
+) -> User:
+    user = await db.get(User, user_id)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No user with id {user_id}")
+    return user
+
+@router.patch("/users/{user_id}", response_model=UserRead)
+async def update_user_role(
+    user_id: int,
+    payload: UserUpdate,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_role(UserRole.OPERATIONS_ADMIN))
+) -> User:
+    user = await db.get(User, user_id)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No user with id {user_id}")
+    user.role = payload.role
+    await db.commit()
+    await db.refresh(user)
+    return user
+
+@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(
+    user_id: int,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_role(UserRole.OPERATIONS_ADMIN))
+) -> None:
+    user = await db.get(User, user_id)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No user with id {user_id}")
+    await db.delete(user)
+    await db.commit()
