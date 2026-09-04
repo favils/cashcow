@@ -14,3 +14,9 @@ class CompletionRead(BaseModel):
     failed: int
 
     model_config = ConfigDict(from_attributes=True)
+
+class SupervisorActiveTechniciansRead(BaseModel):
+    supervisor_id: int
+    active_technician_count: int
+
+    model_config = ConfigDict(from_attributes=True)

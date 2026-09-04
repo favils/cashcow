@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db
-from app.schemas.service import DiscrepencyRead, CompletionRead
-from app.models import ServiceCall, Technician, ATM
+from app.schemas.service import DiscrepencyRead, CompletionRead, SupervisorActiveTechniciansRead
+from app.models import ServiceCall, Technician, ATM, Branch
 from app.models.enums import ServiceStatus
+
+ACTIVE_SERVICE_STATUSES = (ServiceStatus.PENDING, ServiceStatus.IN_PROGRESS)
 
 router = APIRouter(prefix="/service", tags=["service"])
 
@@ -40,4 +42,22 @@ async def get_completions(
 
     result = await db.execute(statement)
     return list(result.mappings().all())
+
+@router.get("/supervisor-active-technicians", response_model=SupervisorActiveTechniciansRead)
+async def get_supervisor_active_technicians(
+        supervisor_id: int = Query(description="Supervisor id"),
+        db: AsyncSession = Depends(get_db)
+    ):
+    statement = (
+        select(func.count(func.distinct(Technician.id)))
+        .join(Branch, Technician.branch_id == Branch.id)
+        .join(ServiceCall, ServiceCall.technician_id == Technician.id)
+        .where(Branch.supervisor_id == supervisor_id)
+        .where(ServiceCall.status.in_(ACTIVE_SERVICE_STATUSES))
+    )
+
+    result = await db.execute(statement)
+    count = result.scalar_one()
+
+    return {"supervisor_id": supervisor_id, "active_technician_count": count}
 
